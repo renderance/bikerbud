@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">BikerBud</string>
+    <string name="weathertab">Weather</string>
+    <string name="exploretab">Explore</string>
+    <string name="submittab">Submit</string>
+    <string name="directionstab">Directions</string>
+    <string name="weather">Hello! Weather fragment is here.</string>
+    <string name="explore">Hello! Explore fragment is here.</string>
+    <string name="submit">Hello! Submit fragment is here.</string>
+    <string name="directions">Hello! Directions fragment is here.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
