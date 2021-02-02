@@ -11,10 +11,6 @@
         <item name="colorAccent">@color/bikersunset</item>
         <item name="android:textColorPrimary">@color/bikercumquad</item>
         <item name="android:textColorSecondary">@color/bikermango</item>
-        <item name="android:navigationBarColor">@color/bikerorange</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi" tools:targetApi="lollipop">@color/bikersunset</item>
     </style>
-    <style name="Theme.BikerBud.MultiLine">
-
-    </style>
-
 </resources>

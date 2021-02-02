@@ -16,6 +16,14 @@ allprojects {
     repositories {
         google()
         jcenter()
+        /*
+        maven {
+            url "https://maven.google.com"
+        }
+        maven {
+            url "http://artifactory.cloud.mapquest.com/artifactory/et-android-binaries"
+        }
+         */
     }
 }
 

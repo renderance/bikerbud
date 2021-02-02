@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,6 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     >
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/tab_layout"
+        />
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -18,7 +24,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:singleLine="false"
         app:tabBackground="@drawable/tabbackgroundselector"
         app:tabTextColor="@color/tabcolorselector"
         app:tabIconTint="@color/tabcolorselector"
@@ -26,10 +31,5 @@
         app:tabMode="fixed"
         app:tabGravity="fill"
         />
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/tab_layout"
-        />
-</RelativeLayout>
+    <include layout="@layout/directions_fragment"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
