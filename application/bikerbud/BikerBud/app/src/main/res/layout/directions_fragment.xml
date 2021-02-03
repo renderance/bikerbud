@@ -29,17 +29,17 @@
             android:layout_height="wrap_content"
             android:background="@color/bikerlemon"
             >
-        <TextView
-            android:id="@+id/directionslist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:text="@string/directions"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            />
+                <TextView
+                    android:id="@+id/directionslist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:text="@string/directions"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    />
         </LinearLayout>
 </LinearLayout>

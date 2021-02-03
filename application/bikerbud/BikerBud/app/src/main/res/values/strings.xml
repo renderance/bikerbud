@@ -4,10 +4,14 @@
     <string name="exploretab">Explore</string>
     <string name="submittab">Submit</string>
     <string name="directionstab">Directions</string>
-    <string name="weather">Hello! Weather fragment is here.</string>
-    <string name="explore">Hello! Explore fragment is here.</string>
-    <string name="submit">Hello! Submit fragment is here.</string>
+    <string name="location">Location:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="weather">Weather fragment has yet to see implementation. Sorry.</string>
+    <string name="explore">Explore fragment has yet to see implementation. Sorry.</string>
+    <string name="submit">Submit fragment has yet to see implementation. Sorry.</string>
     <string name="directions">Currently no directions to display. Select a route to request directions.</string>
+    <string name="warningheader">Warnings:</string>
     <string name="weatherwarn_sliding">Sliding danger:</string>
     <string name="weatherwarn_icy_roads">Icy Roads!</string>
     <string name="weatherwarn_wet_roads">Wet Roads!</string>
@@ -16,10 +20,10 @@
     <string name="weatherwarn_strong_wind">High Wind Speed!</string>
     <string name="weatherwarn_visibility">Bad visibility:</string>
     <string name="weatherwarn_vis_rain">Rainfall!</string>
-    <string name="weatherwarn_vis_mist">Dense Mists!</string>
+    <string name="weatherwarn_vis_mist">Mist!</string>
     <string name="weatherwarn_vis_snow">Snowfall!</string>
     <string name="weatherwarn_temp">Extreme temperature:</string>
     <string name="weatherwarn_hot">Heat!</string>
     <string name="weatherwarn_cold">Cold!</string>
-    <string name="weatherwarn_advice">As always: Dress for the slide, not the ride.</string>
+    <string name="weatherwarn_advice">"As always: \nDress for the slide, not the ride."</string>
 </resources>

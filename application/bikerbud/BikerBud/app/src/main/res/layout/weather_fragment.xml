@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     >
-
-    <TextView
-        android:id="@+id/weathertext"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/weather"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"
-        />
+        android:padding="20dp"
+        android:orientation="vertical"
+        >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/locationheader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="62dp"
+            android:text="@string/location"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            />
+        <TextView
+            android:id="@+id/locationlongitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/longitude"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            />
+        <TextView
+            android:id="@+id/locationlatitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/latitude"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            />
+        <TextView
+            android:id="@+id/warningheader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/warningheader"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/weatherwarn_advice"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:layout_marginBottom="62dp"
+            />
+
+    </LinearLayout>
+</ScrollView>

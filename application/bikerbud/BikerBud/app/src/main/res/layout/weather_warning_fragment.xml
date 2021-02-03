@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/warning_icon"
+        android:layout_width="@dimen/tab_max_width"
+        android:layout_height="@dimen/custom_tab_layout_height"
+        />
+    <TextView
+        android:id="@+id/warning_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weather"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        />
+    <TextView
+        android:id="@+id/warning_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weather"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        />
+</LinearLayout>
