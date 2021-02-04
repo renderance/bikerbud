@@ -26,4 +26,5 @@
     <string name="weatherwarn_hot">Heat!</string>
     <string name="weatherwarn_cold">Cold!</string>
     <string name="weatherwarn_advice">"As always: \nDress for the slide, not the ride."</string>
+    <string name="unknown">unknown</string>
 </resources>
