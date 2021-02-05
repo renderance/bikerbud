@@ -87,9 +87,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/tabbackgroundselector"
-                android:text="Refresh"
+                android:text="@string/refresh"
                 android:textColor="@color/tabcolorselector"
                 android:clickable="true"
+                android:focusable="true"
                 android:layout_marginTop="20dp"
                 />
         </LinearLayout>
@@ -114,7 +115,8 @@
                 android:id="@+id/warningcontainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
+                android:padding="10dp"
                 >
             </LinearLayout>
             <TextView
@@ -125,6 +127,7 @@
                 android:text="@string/weatherwarn_advice"
                 android:textSize="20sp"
                 android:textStyle="normal"
+                android:layout_marginBottom="120dp"
                 />
         </LinearLayout>
     </LinearLayout>
