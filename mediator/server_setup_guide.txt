@@ -1,0 +1,19 @@
+We will be using Node.js to setup a server to handle the requests.
+
+Web requests are an import part of modern web development. To make them easier, the fetch() method has been added to the JavaScript language.
+
+It helps if you're familiar with the basics of API's. Look into: HTTP requests, HTTP verbs/methods and HTTP response codes.
+
+Install the Node.js webserver (https://nodejs.org/en/) and run the npm install command in the main folder of the project. This downloads the project dependencies defined in package.json. Finally run the project using node main.js and going to localhost:8000 in your browser. You should see the working version of the Sogyo Adventure webshop so far.
+
+Open main.js and look at the various routes defined there. Before continuing with the other tasks, understand what each of the routes does and what they might do.
+
+Go back to client/index.html and update it so that the various attractions are no longer hard coded. Abstract the common HTML used for every attraction into a common <template> (like the one used in the shopping basket). When loading the page make a call to api/attractions using fetch("api/attractions"). Await the request and parse the actual response from JSON to JavaScript objects. Instantiate a template for each of the available attractions. Dynamically show the park name, the minimum number of adults and minimum number of kids for the family discount, as well as the discount (displayed in human readable percentages.)
+
+On client/shoppingbasket.html a call should be made to api/placeorder when the user clicks the pay button. Because we will be sending the order data from the client to the server, this will be a POST request. This is also done using the fetch() method, requiring some additional configuration. Write the client side code to make the API request (in client/shoppingbasket.html), then the server side code to handle the request (in main.js). There should be one less ticket available for each ticket the user orders. Also the order should be saved into a separate array similar to the one that contains the attraction information. Now we're running the site on a webserver, we no longer should redirect users to client/orderplaced.html but to just orderplaced.html.
+
+If there are no more tickets available for a certain attraction, the order button should be disabled.
+
+Update client/index.html in a way to display the discount in real time. When the user enters a value for the number of adults or kids or changes the number, the total price should be shown. The discount should of course be factored into the total price, if eligible.
+
+Display the total price for a ticket in the shopping basket.
