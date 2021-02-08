@@ -24,9 +24,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -35,14 +40,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 public class WeatherFragment extends Fragment {
 
-    private final int[] textarray;
-    private final int[] iconarray;
+    private WarningMaker wm;
     private FragmentManager fm;
     private LocationManager locationManager;
     private Context mContext;
@@ -51,83 +51,41 @@ public class WeatherFragment extends Fragment {
     public Location mlocation;
     private Criteria criteria;
     private Looper looper;
+    private boolean[] whichErrorsToDisplay;
     private boolean[] whichWarningsToDisplay;
 
     public WeatherFragment() {
-        // Required empty public constructor
-        textarray = new int[]{
-                R.string.warningerror,
-                R.string.weatherwarn_sliding,
-                R.string.weatherwarn_icy_roads,
-                R.string.weatherwarn_wet_roads,
-                R.string.weatherwarn_snowy_roads,
-                R.string.weatherwarn_wind,
-                R.string.weatherwarn_strong_wind,
-                R.string.weatherwarn_visibility,
-                R.string.weatherwarn_vis_rain,
-                R.string.weatherwarn_vis_mist,
-                R.string.weatherwarn_vis_snow,
-                R.string.weatherwarn_temp,
-                R.string.weatherwarn_hot,
-                R.string.weatherwarn_cold,
-                R.string.warningcommunicaterror,
-                R.string.jsonerror
-        };
-        iconarray = new int[]{
-                R.drawable.tabbackgroundselector,
-                R.drawable.tabbackgroundselector,
-                R.drawable.ic_warn_ice,
-                R.drawable.ic_warn_rain,
-                R.drawable.ic_warn_snow,
-                R.drawable.tabbackgroundselector,
-                R.drawable.ic_warn_wind,
-                R.drawable.tabbackgroundselector,
-                R.drawable.ic_warn_rain,
-                R.drawable.ic_warn_mist,
-                R.drawable.ic_warn_snow,
-                R.drawable.tabbackgroundselector,
-                R.drawable.ic_warn_hot,
-                R.drawable.ic_warn_cold,
-                R.drawable.tabbackgroundselector,
-                R.drawable.tabbackgroundselector
-        };
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fm = getFragmentManager();
-        mContext = this.getContext();
+        this.fm = getFragmentManager();
+        this.mContext = this.getContext();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.wm = new WarningMaker(mContext);
         return inflater.inflate(R.layout.weather_fragment, container, false);
     }
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Button locationgetbutton = getView().findViewById(R.id.refreshbutton);
         longitude = getView().findViewById(R.id.textlongitude);
         latitude = getView().findViewById(R.id.textlatitude);
-        criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setSpeedRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria = setCriteria();
         looper = null;
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationgetbutton.setOnClickListener(v -> locationManager.requestSingleUpdate(criteria, locationListener, looper));
         locationManager.requestSingleUpdate(criteria, locationListener, looper);
     }
 
-    final LocationListener locationListener = new LocationListener(){
+    final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mlocation = location;
@@ -154,68 +112,126 @@ public class WeatherFragment extends Fragment {
         }
     };
 
-    private void requestWarnings() {
-        whichWarningsToDisplay = new boolean[]{
-                true,
-                false, false, false, false, false, false, false, false, false, false, false, false, false,
-                false, false
-        };
+    private void requestWarnings(){
+        whichWarningsToDisplay=new boolean[15];
+        whichErrorsToDisplay=new boolean[8];
         RequestQueue queue = Volley.newRequestQueue(mContext);
-        ServerAddress address = new ServerAddress();
-        String url = address.getAddress();
+        String url = ServerAddress.getAddress();
         String parameters = "?"
-                + "long=" + mlocation.getLongitude()
-                + "&"
-                + "lat=" + mlocation.getLatitude();
-        StringRequest request = new StringRequest(Request.Method.GET, url + parameters, response -> {
-            try {
-                JSONObject warningsJson = new JSONObject(response);
-                JSONArray warningsArray = warningsJson.getJSONArray("warnings");
-                for(int i =0; i<warningsArray.length();i++){
-                    whichWarningsToDisplay[i]=warningsArray.getBoolean(i);
-                }
-                displayWarnings(whichWarningsToDisplay);
-            } catch (JSONException e) {
-                whichWarningsToDisplay[0] = false;
-                whichWarningsToDisplay[15] = true;
-                displayWarnings(whichWarningsToDisplay);
-            }
-        }, error -> {
-            whichWarningsToDisplay[0] = false;
-            whichWarningsToDisplay[14] = true;
-            displayWarnings(whichWarningsToDisplay);
-        });
+            + "long=" + mlocation.getLongitude()
+            + "&"
+            + "lat=" + mlocation.getLatitude();
+        StringRequest request = new StringRequest(
+            Request.Method.GET,
+            url + parameters,
+            r -> handleResponse(r),
+            e -> handleError(e)
+        );
         queue.add(request);
     }
 
-    private void displayWarnings(boolean[] whichWarningsToDisplay){
+    private void handleResponse(String response){
+        try {
+            JSONObject warningsJson = new JSONObject(response);
+            JSONArray warningsArray = warningsJson.getJSONArray("warnings");
+            for (int i = 0; i < warningsArray.length(); i++) {
+                whichWarningsToDisplay[i] = warningsArray.getBoolean(i);
+            }
+            JSONObject errorsJson = new JSONObject(response);
+            JSONArray errorsArray = errorsJson.getJSONArray("errors");
+            for (int i = 0; i < errorsArray.length(); i++) {
+                whichErrorsToDisplay[i] = errorsArray.getBoolean(i);
+            }
+        }
+        catch(JSONException e){
+            whichErrorsToDisplay[1]=false;
+            whichErrorsToDisplay[4]=true;
+        }
+        displayElements(whichWarningsToDisplay, whichErrorsToDisplay);
+    }
+
+    private void handleError(VolleyError error){
+        whichErrorsToDisplay[0]=true;
+        if( error instanceof NetworkError) {
+            whichErrorsToDisplay[1]=true;
+        } else if( error instanceof ServerError) {
+            whichErrorsToDisplay[2]=true;
+        } else if( error instanceof AuthFailureError) {
+            whichErrorsToDisplay[2]=true;
+        } else if( error instanceof ParseError) {
+            whichErrorsToDisplay[3]=true;
+        } else if( error instanceof NoConnectionError) {
+            whichErrorsToDisplay[1]=true;
+        } else if( error instanceof TimeoutError) {
+            whichErrorsToDisplay[1]=true;
+        }
+        displayElements(whichWarningsToDisplay,whichErrorsToDisplay);
+    }
+
+    private void displayElements(boolean[] warnings, boolean[] errors) {
         LinearLayout container = getView().findViewById(R.id.warningcontainer);
         container.removeAllViews();
-        for(int i=0; i<whichWarningsToDisplay.length; i++){
-            if(whichWarningsToDisplay[i]){
-                addWarning(i);
+        for (int i = 0; i < errors.length; i++) {
+            if (errors[i]) {
+                addElement(wm.getError(i), mContext, getView().findViewById(R.id.warningcontainer), i == 0, true);
+            }
+        }
+        for (int i = 0; i < warnings.length; i++) {
+            if (warnings[i]) {
+                addElement(wm.getWarning(i), mContext, getView().findViewById(R.id.warningcontainer), i == 0, false);
             }
         }
     }
 
-    private void addWarning(int i) {
-        LinearLayout thisWarning = new LinearLayout(mContext);
-        LinearLayout container = getView().findViewById(R.id.warningcontainer);
-        thisWarning.setOrientation(LinearLayout.HORIZONTAL);
-        TextView text = new TextView(mContext);
-        text.setText(textarray[i]);
+    private void addElement(int i, Context context, LinearLayout container, boolean isHeader, boolean isError) {
+        LinearLayout element = new LinearLayout(context);
+        element.setOrientation(LinearLayout.HORIZONTAL);
+        TextView text = new TextView(context);
+        ImageView icon = new ImageView(context);
+        formatTextElement(i, context,text,isHeader,isError);
+        formatIconElement(i, context,text,icon);
+        element.addView(icon);
+        element.addView(text);
+        container.addView(element);
+    }
+
+    private void formatTextElement(int i, Context context,TextView text, boolean isHeader, boolean isError){
+        text.setText(i);
         text.setTextSize(18);
-        if(i!=0 && i!=1 && i!=5 && i!=7 && i!=11 && i!=14){
-            ImageView icon = new ImageView(mContext);
-            icon.setImageResource(iconarray[i]);
-            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            thisWarning.addView(icon);
-            icon.setPadding(10,10,40,10);
+        if(isHeader){
+            text.setAllCaps(true);
+            text.setTextSize(21);
+            text.setPadding(0, 40, 0, 20);
+        }
+        else {
+            text.setPadding(40, 10, 0, 10);
+        }
+        if(isError){
+            text.setTextColor(context.getResources().getColor(R.color.bikercumquad));
+        }
+    }
+
+    private void formatIconElement(int i, Context context, TextView text, ImageView iconview){
+        int icon = wm.getIcon(i);
+        if (icon != -1) {
+            iconview.setImageResource(icon);
+            iconview.setPadding(80, 10, 20, 10);
             text.setGravity(Gravity.CENTER);
         } else {
             text.setTypeface(null, Typeface.BOLD);
         }
-        thisWarning.addView(text);
-        container.addView(thisWarning);
+    }
+
+    private Criteria setCriteria() {
+        Criteria crit = new Criteria();
+        crit.setAccuracy(Criteria.ACCURACY_COARSE);
+        crit.setPowerRequirement(Criteria.POWER_LOW);
+        crit.setAltitudeRequired(false);
+        crit.setBearingRequired(false);
+        crit.setSpeedRequired(false);
+        crit.setCostAllowed(true);
+        crit.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        crit.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+        return crit;
     }
 }

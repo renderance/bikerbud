@@ -101,22 +101,11 @@
             android:padding="20dp"
             android:orientation="vertical"
             >
-            <TextView
-                android:id="@+id/warningheader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/warningheader"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                />
             <LinearLayout
                 android:id="@+id/warningcontainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="10dp"
                 >
             </LinearLayout>
             <TextView
@@ -124,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/weatherwarn_advice"
+                android:text="@string/advice"
                 android:textSize="20sp"
                 android:textStyle="normal"
                 android:layout_marginBottom="120dp"
