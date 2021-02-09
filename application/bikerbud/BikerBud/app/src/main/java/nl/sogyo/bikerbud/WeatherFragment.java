@@ -117,7 +117,7 @@ public class WeatherFragment extends Fragment {
         whichErrorsToDisplay=new boolean[8];
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ServerAddress.getAddress();
-        String parameters = "?"
+        String parameters = "/weather?"
             + "long=" + mlocation.getLongitude()
             + "&"
             + "lat=" + mlocation.getLatitude();
@@ -159,7 +159,7 @@ public class WeatherFragment extends Fragment {
         } else if( error instanceof AuthFailureError) {
             whichErrorsToDisplay[2]=true;
         } else if( error instanceof ParseError) {
-            whichErrorsToDisplay[3]=true;
+            whichErrorsToDisplay[4]=true;
         } else if( error instanceof NoConnectionError) {
             whichErrorsToDisplay[1]=true;
         } else if( error instanceof TimeoutError) {

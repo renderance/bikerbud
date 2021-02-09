@@ -36,5 +36,6 @@
     <string name="warn_11">Extreme temperature:</string>
     <string name="warn_12">Heat</string>
     <string name="warn_13">Cold</string>
+    <string name="warn_14">Nothing to report.</string>
     <string name="advice">"As always: \nDress for the slide, not the ride."</string>
 </resources>

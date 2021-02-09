@@ -4,6 +4,7 @@
   "description": "Handles request from client and forwards to relevant APIs",
   "main": "main.js",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "node-fetch": "^2.6.1"
   }
 }
