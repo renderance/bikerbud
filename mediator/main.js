@@ -5,7 +5,8 @@ const fetch = require("node-fetch");
 app.use(express.static('client'));
 app.use(express.json());
 const weatherkey = "20cc8131ac39737ce6b8656007612a45";
-const weatherapi = "https://api.openweathermap.org/data/2.5/weather"
+const weatherapi = "https://api.openweathermap.org/data/2.5/weather";
+const weatherhistory = "https://api.openweathermap.org/data/2.5/onecall/timemachine";
 
 function getDefaultReplyobject(){
     let replyobject = {
@@ -26,16 +27,25 @@ function extractUrlParameters(url){
     return params;
 }
 
-function makeRequestUrl(request,reply){
+function appendHistoryOptions(requestUrl,day){
+  let secondsIn1day = 60*60*24;
+  let currentUnixTime = Math.floor(Date.now() / 1000);
+  let requestUnixTime = currentUnixTime-secondsIn1day*(3-day);
+  requestUrl = requestUrl
+    +"&type="+"hour"
+    +"&dt="+requestUnixTime
+  return requestUrl;
+}
+
+function makeRequestUrl(request,reply,apiurl){
     try{
         let params = extractUrlParameters(request.url)
-        let requestUrl = weatherapi
+        let requestUrl = apiurl
             +"?"
             +"lat="+params.lat
             +"&lon="+params.long
             +"&appid="+weatherkey
-            +"&units="+"metric"
-            +"&exclude="+"minutely,daily,hourly";
+            +"&units="+"metric";
         return requestUrl;
     } catch (error) {
         reply.errors[3]=true;
@@ -50,6 +60,15 @@ async function makeWeatherCall(request,reply){
     } catch (error) {
         reply.errors[5]=true;
     }
+}
+
+async function makeHistoryCalls(request,reply){
+  let responses = [];
+  for(day in [0,1,2]){
+    requestUrl = appendHistoryOptions(request,day);
+    responses[day]= await makeWeatherCall(requestUrl,reply);
+  }
+  return responses;
 }
 
 function isResponseNotOK(response){
@@ -67,6 +86,14 @@ function isResponseNotOK(response){
     }
 }
 
+function isResponsesNotOk(histResponses){
+  let anyResponseNotOk = false;
+  for(response in histResponses){
+    anyResponseNotOk = isResponseNotOK(response) || anyResponseNotOk;
+  }
+  return anyResponseNotOk;
+}
+
 function isAnyTrue(array){
     if(array.includes(true)){
         return true;
@@ -75,132 +102,86 @@ function isAnyTrue(array){
     }
 }
 
-function determineWhichWarningsToDisplay(owmResponse){
+function isConditionMet(condition){
+  return (condition ? true : false);
+}
+
+function isConditionMetInHistory(response,condition){
+  let conditionMetInHistory = false;
+  for(day in response){
+    for(hour in response[day].hourly){
+      for(entry in response[day].hourly[hour].weather){
+        let code = response[day].hourly[hour].weather[entry].id;
+        let temp = response[day].hourly[hour].temp;
+        conditionMetInHistory = conditionMetInHistory || isConditionMet(condition(code,temp))
+      }
+    }
+  }
+  return conditionMetInHistory;
+}
+
+function snowCondition(code,temp){
+  return (code > 599 && code < 700) ? true : false ;
+}
+
+function rainCondition(code,temp){
+  return (code < 600) ? true : false ;
+}
+
+function iceCondition(code,temp){
+  if(snowCondition(code,temp) || rainCondition(code,temp) && temp < 3){
+    return true;
+  }
+  return false;
+}
+
+function determineWhichWarningsToDisplay(owmResponse,histResponses){
     let warnings = [
         false,false,false,false,false,false,false,
         false,false,false,false,false,false,false,
         false,
     ]
-    warnings[0]=isAnyTrue(warnings);
-    warnings[14]=!warnings[0];
+    warnings[13]= isConditionMet(owmResponse.main.feels_like < 5);
+    warnings[12]= isConditionMet(owmResponse.main.feels_like > 30);
+    warnings[11]= isAnyTrue([warnings[12],warnings[13]]);
+    
+    warnings[10]= isConditionMet(owmResponse.main.id > 599 && owmResponse.main.id < 700);
+    warnings[9]=  isConditionMet(owmResponse.main.id == 701 || owmResponse.main.id == 741);
+    warnings[8]=  isConditionMet(owmResponse.main.id < 600);
+    warnings[7]=  isAnyTrue([warnings[8],warnings[9],warnings[10]]);
+    
+    warnings[6]=  isConditionMet(owmResponse.wind.speed > 6 || owmResponse.wind.gust > 7);
+    warnings[5]=  isAnyTrue([warnings[5]]);
+    
+    warnings[4]=  isConditionMetInHistory(histResponses,snowCondition);
+    warnings[3]=  isConditionMetInHistory(histResponses,rainCondition);
+    warnings[2]=  isConditionMetInHistory(histResponses,iceCondition);
+    warnings[1]=  isAnyTrue([warnings[2],warnings[3],warnings[4]])
+    
+    warnings[0]=  isAnyTrue(warnings);
+    warnings[14]= !warnings[0];
+    
     return warnings;
 }
 
 async function processWeatherCall(request,response){
     let replyObject = getDefaultReplyobject();
-    let requestUrl = makeRequestUrl(request,replyObject);
-    let owmResponse = await makeWeatherCall(requestUrl,replyObject);
+    let requestOwmUrl = makeRequestUrl(request,replyObject,weatherapi);
+    let requestHistUrl = makeRequestUrl(request,replyObject,weatherhistory);
+    let owmResponse = await makeWeatherCall(requestOwmUrl,replyObject);
+    let histResponses = await makeHistoryCalls(requestHistUrl,replyObject);
     replyObject.errors[6]=isResponseNotOK(owmResponse);
+    replyObject.errors[6]=isResponsesNotOk(histResponses) || replyObject.errors[6];
     replyObject.errors[0]=isAnyTrue(replyObject.errors);
     if(replyObject.errors[0] == false){
-        replyObject.warnings = determineWhichWarningsToDisplay(owmResponse);
+        replyObject.warnings = determineWhichWarningsToDisplay(owmResponse,histResponses);
     }
     response.json(replyObject);
 }
 
 app.get("/weather", function (request, response){
+    console.log("Receiving weather call from app.");
     processWeatherCall(request,response);
 })
 
 app.listen(7070, () => console.log('BikerBud mediator listening on port 7070!'));
-
-/*
-The API response when exceeding limitations:
-{ "cod": 429,
-"message": "Your account is temporary blocked due to exceeding of requests limitation of your subscription type. 
-Please choose the proper subscription http://openweathermap.org/price"
-}
-
-The API response for current weather:
-api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-
-Yields:
-{
-  "coord": {
-    "lon": -122.08,
-    "lat": 37.39
-  },
-  "weather": [
-    {
-      "id": 800,
-      "main": "Clear",
-      "description": "clear sky",
-      "icon": "01d"
-    }
-  ],
-  "base": "stations",
-  "main": {
-    "temp": 282.55,
-    "feels_like": 281.86,
-    "temp_min": 280.37,
-    "temp_max": 284.26,
-    "pressure": 1023,
-    "humidity": 100
-  },
-  "visibility": 16093,
-  "wind": {
-    "speed": 1.5,
-    "deg": 350
-  },
-  "clouds": {
-    "all": 1
-  },
-  "dt": 1560350645,
-  "sys": {
-    "type": 1,
-    "id": 5122,
-    "message": 0.0139,
-    "country": "US",
-    "sunrise": 1560343627,
-    "sunset": 1560396563
-  },
-  "timezone": -25200,
-  "id": 420006353,
-  "name": "Mountain View",
-  "cod": 200
-  }
- 
-The historic data request:
-http://history.openweathermap.org/data/2.5/history/city?lat={lat}&lon={lon}&type=hour&start={start}&end={end}&appid={API key}
-
-YIELDS:
-{
-  "message": "Count: 24",
-  "cod": "200",
-  "city_id": 4298960,
-  "calctime": 0.00297316,
-  "cnt": 24,
-  "list": [
-    {
-     "dt": 1578384000,
-     "main": {
-       "temp": 275.45,
-       "feels_like": 271.7,
-       "pressure": 1014,
-       "humidity": 74,
-       "temp_min": 274.26,
-       "temp_max": 276.48
-     },
-     "wind": {
-       "speed": 2.16,
-       "deg": 87
-     },
-     "clouds": {
-       "all": 90
-     },
-     "weather": [
-       {
-         "id": 501,
-         "main": "Rain",
-         "description": "moderate rain",
-         "icon": "10n"
-       }
-     ],
-     "rain": {
-       "1h": 0.9
-     }
-    },
-    ....
-  ]
-}
-*/

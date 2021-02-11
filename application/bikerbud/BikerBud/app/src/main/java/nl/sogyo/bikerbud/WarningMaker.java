@@ -16,7 +16,6 @@ public class WarningMaker {
     };
 
     public int getIcon(int i){
-        System.out.println(context.getResources().getResourceName(i));
         switch (context.getResources().getResourceName(i)) {
             case "nl.sogyo.bikerbud:string/warn_2":
                 return context.getResources().getIdentifier("ic_warn_ice", "drawable", context.getPackageName());
