@@ -129,10 +129,39 @@ function rainCondition(code,temp){
 }
 
 function iceCondition(code,temp){
-  if(snowCondition(code,temp) || rainCondition(code,temp) && temp < 3){
+  if((snowCondition(code,temp) || rainCondition(code,temp)) && temp < 3){
     return true;
   }
   return false;
+}
+
+function getTemperatureWarningsToDisplay(warnings,owmResponse){
+    warnings[13]= isConditionMet(owmResponse.main.feels_like < 5);
+    warnings[12]= isConditionMet(owmResponse.main.feels_like > 30);
+    warnings[11]= isAnyTrue([warnings[12],warnings[13]]);
+    return warnings;
+}
+
+function getVisibilityWarningsToDisplay(warnings,owmResponse){
+    warnings[10]= isConditionMet(snowCondition(owmResponse.main.id));
+    warnings[9]=  isConditionMet(owmResponse.main.id == 701 || owmResponse.main.id == 741);
+    warnings[8]=  isConditionMet(rainCondition(owmResponse.main.id));
+    warnings[7]=  isAnyTrue([warnings[8],warnings[9],warnings[10]]);
+    return warnings;
+}
+
+function getWindWarningsToDisplay(warnings,owmResponse){
+    warnings[6]=  isConditionMet(owmResponse.wind.speed > 6 || owmResponse.wind.gust > 7);
+    warnings[5]=  isAnyTrue([warnings[5]]);
+    return warnings;
+}
+
+function getSlidingWarningsToDisplay(warnings,histResponses){
+    warnings[4]=  isConditionMetInHistory(histResponses,snowCondition);
+    warnings[3]=  isConditionMetInHistory(histResponses,rainCondition);
+    warnings[2]=  isConditionMetInHistory(histResponses,iceCondition);
+    warnings[1]=  isAnyTrue([warnings[2],warnings[3],warnings[4]]);
+    return warnings;
 }
 
 function determineWhichWarningsToDisplay(owmResponse,histResponses){
@@ -141,26 +170,12 @@ function determineWhichWarningsToDisplay(owmResponse,histResponses){
         false,false,false,false,false,false,false,
         false,
     ]
-    warnings[13]= isConditionMet(owmResponse.main.feels_like < 5);
-    warnings[12]= isConditionMet(owmResponse.main.feels_like > 30);
-    warnings[11]= isAnyTrue([warnings[12],warnings[13]]);
-    
-    warnings[10]= isConditionMet(owmResponse.main.id > 599 && owmResponse.main.id < 700);
-    warnings[9]=  isConditionMet(owmResponse.main.id == 701 || owmResponse.main.id == 741);
-    warnings[8]=  isConditionMet(owmResponse.main.id < 600);
-    warnings[7]=  isAnyTrue([warnings[8],warnings[9],warnings[10]]);
-    
-    warnings[6]=  isConditionMet(owmResponse.wind.speed > 6 || owmResponse.wind.gust > 7);
-    warnings[5]=  isAnyTrue([warnings[5]]);
-    
-    warnings[4]=  isConditionMetInHistory(histResponses,snowCondition);
-    warnings[3]=  isConditionMetInHistory(histResponses,rainCondition);
-    warnings[2]=  isConditionMetInHistory(histResponses,iceCondition);
-    warnings[1]=  isAnyTrue([warnings[2],warnings[3],warnings[4]])
-    
+    warnings = getTemperatureWarningsToDisplay(warnings,owmResponse);
+    warnings = getVisibilityWarningsToDisplay(warnings,owmResponse);
+    warnings = getWindWarningsToDisplay(warnings,owmResponse);
+    warnings = getSlidingWarningsToDisplay(warnings,histResponses);    
     warnings[0]=  isAnyTrue(warnings);
     warnings[14]= !warnings[0];
-    
     return warnings;
 }
 
