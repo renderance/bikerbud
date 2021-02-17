@@ -38,4 +38,10 @@
     <string name="warn_13">Cold</string>
     <string name="warn_14">Nothing to report.</string>
     <string name="advice">"As always: \nDress for the slide, not the ride."</string>
+    <string name="sub_begin">Begin tracking</string>
+    <string name="sub_stop">Stop tracking</string>
+    <string name="sub_submit">Submit route</string>
+    <string name="sub_waypoint">Waypoints:</string>
+    <string name="sub_cancel">Clear waypoints</string>
+    <string name="none">No waypoints to display.</string>
 </resources>

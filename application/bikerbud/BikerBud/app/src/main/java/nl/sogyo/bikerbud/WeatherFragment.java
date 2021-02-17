@@ -3,6 +3,7 @@ package nl.sogyo.bikerbud;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.location.Address;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -169,17 +170,21 @@ public class WeatherFragment extends Fragment {
     }
 
     private void displayElements(boolean[] warnings, boolean[] errors) {
-        LinearLayout container = getView().findViewById(R.id.warningcontainer);
-        container.removeAllViews();
-        for (int i = 0; i < errors.length; i++) {
-            if (errors[i]) {
-                addElement(wm.getError(i), mContext, getView().findViewById(R.id.warningcontainer), i == 0, true);
+        try {
+            LinearLayout container = getView().findViewById(R.id.warningcontainer);
+            container.removeAllViews();
+            for (int i = 0; i < errors.length; i++) {
+                if (errors[i]) {
+                    addElement(wm.getError(i), mContext, getView().findViewById(R.id.warningcontainer), i == 0, true);
+                }
             }
-        }
-        for (int i = 0; i < warnings.length; i++) {
-            if (warnings[i]) {
-                addElement(wm.getWarning(i), mContext, getView().findViewById(R.id.warningcontainer), i == 0, false);
+            for (int i = 0; i < warnings.length; i++) {
+                if (warnings[i]) {
+                    addElement(wm.getWarning(i), mContext, getView().findViewById(R.id.warningcontainer), i == 0, false);
+                }
             }
+        } catch( NullPointerException e) {
+            Log.d("viewupdate Interrupt", "Weather Fragment update through displayElements interrupted.");
         }
     }
 
@@ -224,7 +229,7 @@ public class WeatherFragment extends Fragment {
 
     private Criteria setCriteria() {
         Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.ACCURACY_COARSE);
+        crit.setAccuracy(Criteria.ACCURACY_FINE);
         crit.setPowerRequirement(Criteria.POWER_LOW);
         crit.setAltitudeRequired(false);
         crit.setBearingRequired(false);
