@@ -44,4 +44,7 @@
     <string name="sub_waypoint">Waypoints:</string>
     <string name="sub_cancel">Clear waypoints</string>
     <string name="none">No waypoints to display.</string>
+    <string name="sub_success">Submission successful!</string>
+    <string name="sub_failure">Submission failed! Try again.</string>
+    <string name="sub_while_track">Cannot submit while tracking.</string>
 </resources>

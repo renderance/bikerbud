@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,7 +26,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -47,6 +47,7 @@ public class SubmitFragment extends Fragment {
     private ArrayList<Location> waypoints;
     private boolean currentlyTracking;
     private TextView placeholder;
+
 
     public SubmitFragment() {
 
@@ -96,7 +97,7 @@ public class SubmitFragment extends Fragment {
         v.setOnClickListener(n -> onTrackingButtonStop(v));
         Button submitButton = getView().findViewById(R.id.submitbutton);
         Button clearButton = getView().findViewById(R.id.cancelbutton);
-        submitButton.setOnClickListener(null);
+        submitButton.setOnClickListener(n -> onSubmitWhileTracking());
         clearButton.setOnClickListener(null);
         locationManager.requestLocationUpdates(10,0,criteria,locationListener,null);
     }
@@ -117,6 +118,14 @@ public class SubmitFragment extends Fragment {
         LinearLayout container = getView().findViewById(R.id.waypointlistholder);
         container.removeAllViews();
         container.addView(placeholder);
+    }
+
+    private void onSubmitWhileTracking(){
+        LinearLayout container = getView().findViewById(R.id.waypointlistholder);
+        TextView confirmation = new TextView(mContext);
+        confirmation.setText(R.string.sub_while_track);
+        confirmation.setTextColor(ContextCompat.getColor(mContext, R.color.bikercumquad));
+        container.addView(confirmation);
     }
 
     private void onSubmitButtonClick(){
@@ -149,11 +158,21 @@ public class SubmitFragment extends Fragment {
     }
 
     private void handleResponse(JSONObject response){
-        System.out.println(response);
+        this.waypoints.clear();
+        LinearLayout container = getView().findViewById(R.id.waypointlistholder);
+        container.removeAllViews();
+        TextView confirmation = new TextView(mContext);
+        confirmation.setText(R.string.sub_success);
+        confirmation.setTextColor(ContextCompat.getColor(mContext, R.color.bikercumquad));
+        container.addView(confirmation);
     }
 
     private void handleError(VolleyError error){
-        System.out.println(error);
+        LinearLayout container = getView().findViewById(R.id.waypointlistholder);
+        TextView confirmation = new TextView(mContext);
+        confirmation.setText(R.string.sub_failure);
+        confirmation.setTextColor(ContextCompat.getColor(mContext, R.color.bikercumquad));
+        container.addView(confirmation);
     }
 
     private void displayWayPoints(){
