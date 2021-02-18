@@ -145,29 +145,37 @@ public class SubmitFragment extends Fragment {
             }
             postData.put("waypoints",waypointsJSON);
         } catch (JSONException e) {
-
+            Log.d("JSONexception", getString(R.string.JSONexception));
         }
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,
                 url+parameters,
                 postData,
                 r -> handleResponse(r),
-                e -> handleError(e)
+                e -> handleError()
         );
         queue.add(request);
     }
 
     private void handleResponse(JSONObject response){
+        System.out.println(response.toString());
         this.waypoints.clear();
         LinearLayout container = getView().findViewById(R.id.waypointlistholder);
         container.removeAllViews();
         TextView confirmation = new TextView(mContext);
-        confirmation.setText(R.string.sub_success);
-        confirmation.setTextColor(ContextCompat.getColor(mContext, R.color.bikercumquad));
-        container.addView(confirmation);
+        try {
+            System.out.println("Entering try!");
+            System.out.println(response.getInt("routeID"));
+            String responseID = String.valueOf(response.getInt("routeID"));
+            confirmation.setText(getResources().getString(R.string.sub_success)+responseID);
+            confirmation.setTextColor(ContextCompat.getColor(mContext, R.color.bikercumquad));
+            container.addView(confirmation);
+        } catch (JSONException e) {
+            handleError();
+        }
     }
 
-    private void handleError(VolleyError error){
+    private void handleError(){
         LinearLayout container = getView().findViewById(R.id.waypointlistholder);
         TextView confirmation = new TextView(mContext);
         confirmation.setText(R.string.sub_failure);
