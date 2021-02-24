@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  bikerbud_database:
+    image: mysql:5.7
+    volumes:
+      - ./database/init.txt:/databaseWD/init.sql
+      - ./database/db:/var/lib/mysql
+    command: --init-file /databaseWD/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'iamroot'
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+  bikerbud_mediator:
+    volumes:
+      - ./mediator:/mediatorWD
+    depends_on: 
+      - bikerbud_database
+    build: ./mediator/
+    ports: 
+      - 7070:7000
+  bikerbud_webapp:
+    volumes:
+      - ./webapp:/webappWD
+    depends_on:
+      - bikerbud_mediator
+    build: ./webapp/
+    ports:
+      - 9090:9000
