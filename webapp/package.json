@@ -5,6 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "express": "^4.16.4",
+    "leaflet": "^1.7.1",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1"
   }

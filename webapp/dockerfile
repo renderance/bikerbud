@@ -4,5 +4,6 @@ RUN npm install
 RUN npm install express
 RUN npm install mysql
 RUN npm i node-fetch
+RUN npm i leaflet
 EXPOSE 9000
 CMD node main.js

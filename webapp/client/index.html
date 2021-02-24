@@ -1,22 +1,57 @@
 <!doctype html>
-<html lang="nl">
-    <head>
-        <meta charset="utf-8">
-        <title>BikerBud Web</title>
-        <meta name="description" content="The BikerBud front-end for browsers!">
-        <link rel="stylesheet" href="style/main.css">
-        <link rel="shortcut icon" href="img/favicon.ico">
-    </head>
+<html>
 
-    <body>
-        <header id="header-wrapper">
-            <header id="header-container">
-                <header id="logo-header">
-                    <img src="img/bikerbud_logo.png">
-                </header>
-                <header id="mainheader">
-                    BikerBuddy
-                </header>
+<head>
+    <meta charset="utf-8">
+    <title>BikerBud Web</title>
+    <meta name="description" content="The BikerBud front-end for browsers!">
+    <link rel="stylesheet" href="style/main.css">
+    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css" />
+    <script type="text/javascript">
+        window.onload = function() {
+            L.mapquest.key = 'oQDLZe52PfGqbqecAG3EQRb60ACRzXnP';
+
+            var map = L.mapquest.map('map', {
+                center: [52.0814496, 4.8578191],
+                layers: L.mapquest.tileLayer('map'),
+                zoom: 13
+            });
+
+            map.addControl(L.mapquest.control());
+        }
+    </script>
+</head>
+
+<body>
+    <header id="header-wrapper">
+        <header id="header-container">
+            <header id="logo-header">
+                <img src="img/bikerbud_logo.png">
+            </header>
+            <header id="mainheader">
+                BikerBuddy
             </header>
         </header>
-    </body>
+    </header>
+
+
+    <main>
+        <div id="warningbox">
+            <div id="warningdisplay">
+                Warning is here
+            </div>
+        </div>
+        <div id="mapdisplay">
+            <div id="map"></div>
+        </div>
+        <div id="routebox">
+            <div id="routedisplay">
+                Route is here
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>

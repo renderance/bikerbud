@@ -1,13 +1,13 @@
 body {
-    font-family: 'Lato', sans-serif;
+    font-family: Cambria, serif;
     padding: 0px;
     margin: 0px;
-
-    --biker_orange:#FFBB7B;
-    --biker_sunset:#FF9356;
-    --biker_lemon:#FFF0BB;
-    --biker_cumquad:#A1300E;
-    --biker_mango:#D16C52;
+    --biker_orange: #FFBB7B;
+    --biker_sunset: #FF9356;
+    --biker_lemon: #FFF0BB;
+    --biker_cumquad: #A1300E;
+    --biker_mango: #D16C52;
+    //background-color: var(--biker_lemon);
 }
 
 #mainheader {
@@ -15,31 +15,30 @@ body {
     color: var(--biker_mango);
     display: inline;
     position: absolute;
-    font-family:monospace;
+    font-family: monospace;
     letter-spacing: 0.12em;
     font-weight: normal;
-    top:15%;
+    top: 15%;
     font-size: min(max(18px, 5vw), 64px)
 }
 
 #logo-header {
     width: 15px;
     display: inline;
-
 }
 
 #logo-header img {
-    width: min(max(16px,12%), 100px);
+    width: min(max(16px, 12%), 100px);
     height: auto;
-    justify-content:center;
+    justify-content: center;
     display: inline;
-    margin-left:2%;
-    margin-right:2%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 #header-wrapper {
     background-color: var(--biker_orange);
-    position:relative;
+    position: relative;
 }
 
 #header-container {
@@ -49,7 +48,63 @@ body {
 }
 
 main {
-    max-width: 720px;
+    display: flex;
     margin: auto;
-    padding: 2%;
+    justify-content: space-around;
+    max-width: 1400px;
+    min-width: 600px;
+    width: 80%;
+    background-color: var(--biker_lemon);
+}
+
+#warningbox {
+    display: inline-block;
+    max-width: 230px;
+    min-width: 200px;
+    width: 23%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: var(--biker_orange);
+    justify-content: space-between;
+}
+
+#mapdisplay {
+    display: inline-block;
+    max-width: 960px;
+    min-width: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 56%;
+    justify-content: space-between;
+}
+
+#routebox {
+    display: inline-block;
+    max-width: 230px;
+    min-width: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 23%;
+    border-radius: 8px;
+    background-color: var(--biker_orange);
+    justify-content: space-between;
+}
+
+#warningdisplay {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#routedisplay {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#map {
+    height: 600px;
 }
