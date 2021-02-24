@@ -16,7 +16,7 @@ body {
     display: inline;
     position: absolute;
     font-family:monospace;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.12em;
     font-weight: normal;
     top:15%;
     font-size: min(max(18px, 5vw), 64px)
