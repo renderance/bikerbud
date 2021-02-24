@@ -1,0 +1,60 @@
+ody {
+    font-family: 'Lato', sans-serif;
+    padding: 0px;
+    margin: 0px;
+
+    --primary-color: #007936;
+    --accent-color: #eee;
+    --tertiary-color: #19502c;
+    --light-text-color: rgb(107, 107, 107);
+    --contrast-color: #a1443f;
+    --contrast-secondary-color: #872321;
+    --contrast-tertiary-color: #450605;
+    --button-color: #4CAF50;
+    --accent-second: #8e8e8e;
+    --accent-first: #bebebe;
+}
+
+#mainheader {
+    background-color: var(--primary-color);
+    color: white;
+    display: inline;
+    position: absolute;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: bold;
+    top:15%;
+    font-size: min(max(18px, 6vw), 64px)
+}
+
+#logo-header {
+    width: 15px;
+    display: inline;
+
+}
+
+#logo-header img {
+    width: min(max(16px,12%), 100px);
+    height: auto;
+    justify-content:center;
+    display: inline;
+    margin-left:2%;
+    margin-right:2%;
+}
+
+#header-wrapper {
+    background-color: var(--primary-color);
+    position:relative;
+}
+
+#header-container {
+    max-width: 960px;
+    margin: auto;
+    overflow: auto;
+}
+
+main {
+    max-width: 720px;
+    margin: auto;
+    padding: 2%;
+}

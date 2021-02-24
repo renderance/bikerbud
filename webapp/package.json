@@ -1,0 +1,11 @@
+{
+  "name": "bikerbudwebapp",
+  "version": "1.0.0",
+  "description": "BikerBud browser front-end.",
+  "main": "main.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.1"
+  }
+}

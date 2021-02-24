@@ -1,0 +1,8 @@
+FROM node:15
+WORKDIR /webappWD
+RUN npm install --save
+RUN npm install express --save
+RUN npm install mysql --save
+RUN npm i node-fetch --save
+EXPOSE 9000
+CMD node main.js

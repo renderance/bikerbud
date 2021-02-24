@@ -8,11 +8,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
 import android.os.Bundle;
+
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+
+import com.mapquest.mapping.MapQuest;
+import com.mapquest.mapping.maps.MapView;
 
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
+
+    //private MapView mMapView;
+    //private MapboxMap mMapboxMap;
+
 
     private TabLayout tabLayout;
 
@@ -33,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
     }
 
-    private void setupTabLabels(){
+    private void setupTabLabels() {
         tabLayout.getTabAt(0).setText(tabLabels[0]);
         tabLayout.getTabAt(1).setText(tabLabels[1]);
         tabLayout.getTabAt(2).setText(tabLabels[2]);
@@ -42,8 +53,49 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);//
+
+        //MapQuest.start(getApplicationContext());
+
+        setContentView(R.layout.activity_main);//
+
+        /*
+        mMapView = (MapView) findViewById(R.id.mapquestMapView);
+
+        mMapView.onCreate(savedInstanceState);
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                mMapboxMap = mapboxMap;
+                mMapView.setStreetMode();
+            }
+        });
+    }
+
+        @Override
+        public void onResume(){
+            super.onResume();
+            mMapView.onResume();
+        }
+
+        @Override
+        public void onPause(){
+            super.onPause();
+            mMapView.onPause();
+        }
+
+        @Override
+        protected void onDestroy(){
+            super.onDestroy();
+            mMapView.onDestroy();
+        }
+
+        @Override
+        protected void onSaveInstanceState(Bundle outState){
+            super.onSaveInstanceState(outState);
+            mMapView.onSaveInstanceState(outState);
+        }*/
+
         final ViewPager viewPager = findViewById(R.id.pager);
 
         Toolbar toolbar = findViewById(R.id.toolbar);

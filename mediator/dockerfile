@@ -1,0 +1,8 @@
+FROM node:15
+WORKDIR /mediatorWD
+RUN npm install
+RUN npm install express
+RUN npm install mysql
+RUN npm i node-fetch
+EXPOSE 7000
+CMD node main.js

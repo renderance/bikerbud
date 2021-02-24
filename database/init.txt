@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS waypoints;
+USE waypoints;
+CREATE TABLE IF NOT EXISTS waypoints (routeID INT NOT NULL, longitude DOUBLE(12,9) NOT NULL, latitude DOUBLE(12,9) NOT NULL, routeindex INT NOT NULL);
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'iamroot';
+CREATE USER IF NOT EXISTS 'mediator'@'%';
+ALTER USER 'mediator'@'%' IDENTIFIED WITH mysql_native_password BY 'iammediator';
+GRANT SELECT, INSERT, ALTER, LOCK TABLES ON waypoints.* TO 'mediator'@'%';
+FLUSH PRIVILEGES;
