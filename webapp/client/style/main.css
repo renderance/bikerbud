@@ -1,30 +1,25 @@
-ody {
+body {
     font-family: 'Lato', sans-serif;
     padding: 0px;
     margin: 0px;
 
-    --primary-color: #007936;
-    --accent-color: #eee;
-    --tertiary-color: #19502c;
-    --light-text-color: rgb(107, 107, 107);
-    --contrast-color: #a1443f;
-    --contrast-secondary-color: #872321;
-    --contrast-tertiary-color: #450605;
-    --button-color: #4CAF50;
-    --accent-second: #8e8e8e;
-    --accent-first: #bebebe;
+    --biker_orange:#FFBB7B;
+    --biker_sunset:#FF9356;
+    --biker_lemon:#FFF0BB;
+    --biker_cumquad:#A1300E;
+    --biker_mango:#D16C52;
 }
 
 #mainheader {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--biker_orange);
+    color: var(--biker_mango);
     display: inline;
     position: absolute;
-    text-transform: uppercase;
+    font-family:monospace;
     letter-spacing: 0.2em;
-    font-weight: bold;
+    font-weight: normal;
     top:15%;
-    font-size: min(max(18px, 6vw), 64px)
+    font-size: min(max(18px, 5vw), 64px)
 }
 
 #logo-header {
@@ -43,7 +38,7 @@ ody {
 }
 
 #header-wrapper {
-    background-color: var(--primary-color);
+    background-color: var(--biker_orange);
     position:relative;
 }
 
