@@ -6,21 +6,10 @@
     <title>BikerBud Web</title>
     <meta name="description" content="The BikerBud front-end for browsers!">
     <link rel="stylesheet" href="style/main.css">
+    <link rel="shortcut icon" href="img/favicon.ico">
     <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
     <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css" />
-    <script type="text/javascript">
-        window.onload = function() {
-            L.mapquest.key = 'oQDLZe52PfGqbqecAG3EQRb60ACRzXnP';
-
-            var map = L.mapquest.map('map', {
-                center: [52.0814496, 4.8578191],
-                layers: L.mapquest.tileLayer('map'),
-                zoom: 13
-            });
-
-            map.addControl(L.mapquest.control());
-        }
-    </script>
+    <script type="text/javascript" src="src/bikerbud_map.js"></script>
 </head>
 
 <body>
@@ -38,8 +27,8 @@
 
     <main>
         <div id="warningbox">
+            <div id="warningtop">Weather status:</div>
             <div id="warningdisplay">
-                Warning is here
             </div>
         </div>
         <div id="mapdisplay">
@@ -47,10 +36,22 @@
         </div>
         <div id="routebox">
             <div id="routedisplay">
-                Route is here
             </div>
         </div>
     </main>
+
+    <template id="errorHeaderTemplate">
+        <div id="errorHeader" class="text"></div>
+    </template>
+    <template id="errorContentTemplate">
+        <div id="errorContent" class="text"></div>
+    </template>
+    <template id="warningHeaderTemplate">
+        <div id="warningHeader" class="text"></div>
+    </template>
+    <template id="warningContentTemplate">
+        <div id="warningContent" class="text"></div>
+    </template>
 
 </body>
 

@@ -7,14 +7,14 @@ app.use(express.json());
 const weather = require('./weather.js');
 const submit = require('./submit.js');
 
-app.post("/submit", function (request, response){
-  console.log("Receiving route submission from app.");
-  submit.processSubmissionCall(request,response);
+app.post("/submit", function(request, response) {
+    console.log("Receiving route submission from app.");
+    submit.processSubmissionCall(request, response);
 })
 
-app.get("/weather", function (request, response){
+app.get("/weather", function(request, response) {
     console.log("Receiving weather call from app.");
-    weather.processWeatherCall(request,response);
+    weather.processWeatherCall(request, response);
 })
 
 app.listen(7000, () => console.log('BikerBud mediator listening on port 7000!'));
