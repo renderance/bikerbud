@@ -188,9 +188,10 @@ async function processWeatherCall(request, response) {
     if (replyObject.errors[0] == false) {
         replyObject.warnings = determineWhichWarningsToDisplay(owmResponse, histResponses);
     }
-    response.json(replyObject);
+    response.json(JSON.stringify(replyObject));
 }
 
 module.exports = {
-    processWeatherCall
+    processWeatherCall,
+    extractUrlParameters
 };

@@ -27,7 +27,7 @@
 
     <main>
         <div id="warningbox">
-            <div id="warningtop">Weather status:</div>
+            <div id="warningtop" class="boxheader">Weather status:</div>
             <div id="warningdisplay">
             </div>
         </div>
@@ -35,22 +35,37 @@
             <div id="map"></div>
         </div>
         <div id="routebox">
+            <div id="routetop" class="boxheader">Submit route:</div>
             <div id="routedisplay">
             </div>
         </div>
     </main>
 
     <template id="errorHeaderTemplate">
-        <div id="errorHeader" class="text"></div>
+        <div id="errorHeader" class="wrap">
+        </div>
     </template>
     <template id="errorContentTemplate">
-        <div id="errorContent" class="text"></div>
+        <div id="errorContent" class="wrap">
+        </div>
     </template>
     <template id="warningHeaderTemplate">
-        <div id="warningHeader" class="text"></div>
+        <div id="warningHeader" class="wrap">
+        </div>
     </template>
     <template id="warningContentTemplate">
-        <div id="warningContent" class="text"></div>
+        <div id="warningContent" class="wrap">
+        </div>
+    </template>
+
+    <template id="warningContentImgTemplate">
+        <img id ="warningContentImg" class="img"/>
+    </template>
+    <template id="contentTextTemplate">
+        <div id="contentText" class="text"></div>
+    </template>
+    <template id="routeButtonTemplate">
+        <button id="routeButton" class="button"></button>
     </template>
 
 </body>

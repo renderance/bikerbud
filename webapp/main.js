@@ -22,20 +22,47 @@ function getDefaultReplyobject() {
     return replyobject;
 }
 
-async function handleRequest(request, response) {
+async function handleRequest(type, request, response) {
     try {
-        const reply = await fetch("http://bikerbud_mediator:7000/weather?" + request.url.split("?")[1])
+        const reply = await fetch("http://bikerbud_mediator:7000" + type + "?" + request.url.split("?")[1], request.body)
         const jsonObj = await reply.json();
         response.json(jsonObj)
     } catch (error) {
         console.log(error)
-        replyObj = getDefaultReplyobject();
-        response.json(replyObj)
+        replyObj = {};
+        response.json(JSON.stringify(replyObj))
+    }
+}
+
+async function handlePostRequest(type, request, response) {
+    try {
+        const reply = await fetch("http://bikerbud_mediator:7000" + type, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(request.body)
+        })
+        const jsonObj = await reply.json();
+        response.json(jsonObj)
+    } catch (error) {
+        console.log(error)
+        replyObj = {};
+        response.json(JSON.stringify(replyObj))
     }
 }
 
 app.get("/weather", function(request, response) {
-    handleRequest(request, response);
+    handleRequest('/weather', request, response);
+})
+
+app.get("/routes", function(request, response) {
+    handleRequest('/routes', request, response);
+})
+
+app.post("/submit", function(request, response) {
+    handlePostRequest('/submit', request, response);
 })
 
 var httpsServer = https.createServer(credentials, app);

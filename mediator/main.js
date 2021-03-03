@@ -17,4 +17,9 @@ app.get("/weather", function(request, response) {
     weather.processWeatherCall(request, response);
 })
 
+app.get("/routes", function(request, response) {
+    console.log("Receiving route call from app.");
+    submit.processRouteCall(request, response);
+})
+
 app.listen(7000, () => console.log('BikerBud mediator listening on port 7000!'));

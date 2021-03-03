@@ -122,7 +122,7 @@ main {
     padding-top: 10px;
     padding-bottom: 10px;
     color: var(--biker_plum);
-    text-transform: : initial;
+    text-transform: initial;
 }
 
 #errorHeader {
@@ -138,7 +138,7 @@ main {
     text-transform: initial;
 }
 
-#warningtop {
+.boxheader {
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 10px;
@@ -147,4 +147,43 @@ main {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 14pt;
+}
+
+#warningContentImg {
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    padding-left: 1em;
+    vertical-align: middle;
+}
+
+#contentText {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+button {
+    background-color: var(--biker_sunset);
+    border: none;
+    box-shadow: 0 3px 0 var(--biker_mango);
+    color: var(--biker_plum);
+    margin: 16px;
+    padding: 6px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+button:hover {
+    background-color: var(--biker_mango);
+    box-shadow: 0 3px 0 var(--biker_cumquad);
+}
+
+button:active {
+    background-color: var(--biker_cumquad);
+    box-shadow: 0 3px 0 var(--biker_cumquad);
 }
