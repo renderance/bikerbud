@@ -36,14 +36,13 @@ function makeSQLRequest(longitudes, latitudes, indices) {
     sqlRequest += "LOCK TABLES waypoints WRITE; ";
     let sqlMaxRouteID = "SELECT @max := MAX(waypoints.routeID) FROM waypoints; ";
     sqlRequest += sqlMaxRouteID;
-    sqlRequest += "INSERT INTO waypoints(routeID,longitude,latitude,routeindex) VALUES ";
+    sqlRequest += "INSERT INTO waypoints (routeID,longitude,latitude,routeindex) VALUES ";
     let sqlRouteID = "IF(@max,@max+1,1)";
     sqlRequest += makeSQLValueList(sqlRouteID, longitudes, latitudes, indices);
     sqlRequest += sqlMaxRouteID;
     sqlRequest += "UNLOCK TABLES;"
     return sqlRequest;
 }
-
 
 function submitToDatabase(longitudes, latitudes, indices) {
     return new Promise((resolve, reject) => {
@@ -124,5 +123,6 @@ async function processRouteCall(request, response) {
 
 module.exports = {
     processSubmissionCall,
-    processRouteCall
+    processRouteCall,
+    con
 };

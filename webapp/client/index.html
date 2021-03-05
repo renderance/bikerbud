@@ -24,20 +24,23 @@
         </header>
     </header>
 
-
     <main>
-        <div id="warningbox">
-            <div id="warningtop" class="boxheader">Weather status:</div>
-            <div id="warningdisplay">
+        <div id="core">
+            <div id="warningbox">
+                <div id="warningtop" class="boxheader">Weather status:</div>
+                <div id="warningdisplay">
+                </div>
+            </div>
+            <div id="mapdisplay">
+                <div id="map"></div>
+            </div>
+            <div id="routebox">
+                <div id="routetop" class="boxheader">Submit route:</div>
+                <div id="routedisplay">
+                </div>
             </div>
         </div>
-        <div id="mapdisplay">
-            <div id="map"></div>
-        </div>
-        <div id="routebox">
-            <div id="routetop" class="boxheader">Submit route:</div>
-            <div id="routedisplay">
-            </div>
+        <div id="nav">
         </div>
     </main>
 
@@ -68,6 +71,43 @@
         <button id="routeButton" class="button"></button>
     </template>
 
+    <template id="popupTemplate">
+        <div id="popupWrapper" class="wrap">
+            <div id="routeNumber"></div>
+            <button 
+                id="directionsFromGreenToPurple" 
+                class="directionsButton"
+                >
+                From green to purple
+            </button>
+            <button 
+                id="directionsFromPurpleToGreen" 
+                class="directionsButton"
+                >
+                From purple to green
+            </button>
+            <button 
+                id="directionsFromMarkerThroughGreenToPurple" 
+                class="directionsButton"
+                >
+                From marker to green then purple
+            </button>
+            <button 
+                id="directionsFromMarkerThroughPurpleToGreen" 
+                class="directionsButton"
+                >
+                From marker to purple then green
+            </button>
+        </div>
+    </template>
+
+    <template id="navigationBoxTemplate">
+        <div id="navigationBox">
+            <div id="navigationtop" class="boxheader">Directions:</div>
+            <div id="navigationdisplay">
+            </div>
+        </div>
+    </template>
 </body>
 
 </html>

@@ -49,6 +49,10 @@ body {
 }
 
 main {
+    display: block;
+}
+
+#core {
     display: flex;
     margin: auto;
     justify-content: space-around;
@@ -186,4 +190,30 @@ button:hover {
 button:active {
     background-color: var(--biker_cumquad);
     box-shadow: 0 3px 0 var(--biker_cumquad);
+}
+
+.directionsButton {
+    font-size: 12px;
+    margin: 8px;
+    width: 24em;
+}
+
+#nav {
+    display: flex;
+    margin: auto;
+    justify-content: space-around;
+    max-width: 1400px;
+    min-width: 600px;
+    width: 80%;
+    background-color: var(--biker_lemon);
+}
+
+#navigationBox {
+    display: inline-block;
+    background-color: var(--biker_orange);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: var(--biker_orange);
+    justify-content: space-between;
 }

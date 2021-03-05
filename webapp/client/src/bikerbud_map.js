@@ -24,8 +24,8 @@ let warnStrings = ["Warnings:",
     "Cold",
     "Nothing to report."
 ];
-imgmap = ['2', '3', '4', '6', '8', '9', '10', '12', '13'];
-imagelist = ['',
+let imgmap = ['2', '3', '4', '6', '8', '9', '10', '12', '13'];
+let imagelist = ['',
     '',
     './img/snowflake.svg',
     './img/rain.svg',
@@ -46,6 +46,8 @@ let mapQuestMap;
 let drawLayer;
 let routeLayer;
 let drawMarkers = [];
+let markerLat;
+let markerLon;
 
 async function getLocation() {
     if (navigator.geolocation) {
@@ -112,13 +114,13 @@ function appendErrorsAndWarnings(display, warningsObject) {
     display.appendChild(clone);
 }
 
-async function getWeatherWarnings(latitude, longitude) {
+async function getWeatherWarnings() {
     var display = document.getElementById("warningdisplay");
     requestUrl =
         "/weather?" +
-        "long=" + longitude +
+        "long=" + markerLon +
         "&" +
-        "lat=" + latitude;
+        "lat=" + markerLat;
     const fetchResponse = await fetch(requestUrl);
     const warningsObject = await fetchResponse.json();
     appendErrorsAndWarnings(display, warningsObject)
@@ -141,6 +143,105 @@ async function getNearbyRoutes(latMin, latMax, lonMin, lonMax) {
     }
 }
 
+async function getRouteDirections(routeNumber, directionString, homeCoordinates) {
+    let navRequestBody = { routeID: routeNumber, direction: directionString };
+    if (homeCoordinates) {
+        navRequestBody['home'] = homeCoordinates;
+    };
+    try {
+        const reply = await fetch("/navigation", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(navRequestBody)
+        });
+        const jsonObj = await reply.json();
+        return jsonObj;
+    } catch (error) {
+        console.log(error)
+        return {};
+    }
+}
+
+function displayDirections(directions) {
+    console.log(directions);
+    document.getElementById("nav").innerHTML = '';
+    let boxTemplate = document.getElementById("navigationBoxTemplate");
+    let box = boxTemplate.content.cloneNode(true);
+    let display = box.getElementById("navigationdisplay");
+    for (step in directions) {
+        direction = directions[step];
+        if (direction.turnType != 0 || step == 0) {
+            if (direction.turnType != -1 || step == directions.length - 1) {
+                imageresource = direction.iconUrl;
+                narrative = direction.narrative;
+                let wrapper = document.getElementById("warning" + "ContentTemplate");
+                let thiswrapper = wrapper.content.cloneNode(true);
+                let image = document.getElementById("warningContentImgTemplate");
+                let thisimage = image.content.cloneNode(true);
+                thisimage.getElementById("warningContentImg").src = imageresource;
+                thiswrapper.querySelector('.wrap').appendChild(thisimage);
+                let textcontent = document.getElementById("contentTextTemplate");
+                let thistextcontent = textcontent.content.cloneNode(true);
+                thistextcontent.querySelector(".text").textContent = narrative;
+                thiswrapper.querySelector('.wrap').appendChild(thistextcontent);
+                display.appendChild(thiswrapper);
+            }
+        }
+    }
+    document.getElementById("nav").appendChild(box);
+}
+
+async function handleNavigationButtonGreenPurpleClick(somevent) {
+    let routeNum = parseInt(somevent.target.parentElement.querySelector("#routeNumber").textContent);
+    let directions = await getRouteDirections(routeNum, 'forward', null);
+    displayDirections(directions);
+}
+
+async function handleNavigationButtonPurpleGreenClick(somevent) {
+    let routeNum = parseInt(somevent.target.parentElement.querySelector("#routeNumber").textContent);
+    let directions = await getRouteDirections(routeNum, 'reverse', null);
+    displayDirections(directions);
+
+}
+
+async function handleNavigationButtonMarkerGreenPurpleClick(somevent) {
+    let routeNum = parseInt(somevent.target.parentElement.querySelector("#routeNumber").textContent);
+    let markerLoc = { lat: markerLat, lon: markerLon };
+    let directions = await getRouteDirections(routeNum, 'forward', markerLoc);
+    displayDirections(directions);
+}
+
+async function handleNavigationButtonMarkerPurpleGreenClick(somevent) {
+    let routeNum = parseInt(somevent.target.parentElement.querySelector("#routeNumber").textContent);
+    let markerLoc = { lat: markerLat, lon: markerLon };
+    let directions = await getRouteDirections(routeNum, 'reverse', markerLoc);
+    displayDirections(directions);
+}
+
+function registerNavigationButtonListeners(htmlElement) {
+    htmlElement.getElementById("directionsFromGreenToPurple")
+        .addEventListener('click', handleNavigationButtonGreenPurpleClick);
+    htmlElement.getElementById("directionsFromPurpleToGreen")
+        .addEventListener('click', handleNavigationButtonPurpleGreenClick);
+    htmlElement.getElementById("directionsFromMarkerThroughGreenToPurple")
+        .addEventListener('click', handleNavigationButtonMarkerGreenPurpleClick);
+    htmlElement.getElementById("directionsFromMarkerThroughPurpleToGreen")
+        .addEventListener('click', handleNavigationButtonMarkerPurpleGreenClick);
+}
+
+function createPopup(routeID) {
+    let popupHTML = document.getElementById("popupTemplate").content.cloneNode(true);
+    popupHTML.getElementById("routeNumber").textContent = routeID;
+    let newPopup = L.popup();
+    newPopup.setContent(popupHTML);
+    registerNavigationButtonListeners(popupHTML);
+    return newPopup;
+}
+
+
 async function drawNearbyRoutes() {
     routeLayer.clearLayers();
     let boundaries = mapQuestMap.getBounds();
@@ -152,38 +253,49 @@ async function drawNearbyRoutes() {
     for (route in routes) {
         for (entry in routes[route]) {
             waypoint = routes[route][entry];
-            routeLayer.addLayer(L.circle([waypoint.latitude, waypoint.longitude], {
-                radius: 2,
-                color: '#FF9356',
-                opacity: 1,
-                fill: true,
-                fillOpacity: 1
-            }));
+            let drawnWaypoint = L.circle(
+                [waypoint.latitude, waypoint.longitude], {
+                    radius: 2,
+                    color: '#FF9356',
+                    opacity: 1,
+                    fill: true,
+                    fillOpacity: 1
+                }
+            );
+            if (entry == 0 || entry == (routes[route].length - 1)) {
+                drawnWaypoint.setRadius(12);
+                let specialColor = entry == 0 ? '#1e8a20' : '#a11f7a'
+                drawnWaypoint.setStyle({ color: specialColor })
+            }
+            drawnWaypoint.bindPopup(createPopup(waypoint.routeID));
+            routeLayer.addLayer(drawnWaypoint);
             if (entry > 0) {
                 oldwaypoint = routes[route][entry - 1];
                 let coords = [
                     [oldwaypoint.latitude, oldwaypoint.longitude],
                     [waypoint.latitude, waypoint.longitude]
-                ]
-                routeLayer.addLayer(L.polyline(
+                ];
+                let drawnWaypointEdge = L.polyline(
                     coords, {
                         color: '#FF9356'
                     }
-                ));
+                );
+                drawnWaypointEdge.bindPopup(createPopup(waypoint.routeID));
+                routeLayer.addLayer(drawnWaypointEdge);
             }
         }
     }
 }
 
-function positionMap(lat, lon) {
+function positionMap() {
     L.mapquest.key = 'oQDLZe52PfGqbqecAG3EQRb60ACRzXnP';
     mapQuestMap = L.map('map', {
-        center: [lat, lon],
+        center: [markerLat, markerLon],
         layers: L.mapquest.tileLayer('map'),
         zoom: 13,
         minZoom: 5
     });
-    L.marker([lat, lon], {
+    L.marker([markerLat, markerLon], {
         icon: L.mapquest.icons.marker({
             primaryColor: '#FF9356',
             secondaryColor: '#D16C52',
@@ -311,10 +423,10 @@ function loadSubmissionWindow() {
 }
 
 async function handlelocation(position) {
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
-    getWeatherWarnings(lat, lon);
-    positionMap(lat, lon);
+    markerLat = position.coords.latitude;
+    markerLon = position.coords.longitude;
+    getWeatherWarnings();
+    positionMap();
     loadSubmissionWindow();
 }
 

@@ -65,5 +65,9 @@ app.post("/submit", function(request, response) {
     handlePostRequest('/submit', request, response);
 })
 
+app.post("/navigation", function(request, response) {
+    handlePostRequest('/navigation', request, response);
+})
+
 var httpsServer = https.createServer(credentials, app);
 httpsServer.listen(9000, () => console.log('BikerBud webapp securely listening on port 9000!'));

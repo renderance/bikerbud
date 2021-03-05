@@ -188,7 +188,7 @@ async function processWeatherCall(request, response) {
     if (replyObject.errors[0] == false) {
         replyObject.warnings = determineWhichWarningsToDisplay(owmResponse, histResponses);
     }
-    response.json(JSON.stringify(replyObject));
+    response.json(replyObject);
 }
 
 module.exports = {
