@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-const weatherkey = process.env.OPEN_WEATHER_MAP_API_KEY;
+const weatherkey = process.env.OPEN_WEATHER_MAP_API_TOKEN;
 const weatherapi = "https://api.openweathermap.org/data/2.5/weather";
 const weatherhistory = "https://api.openweathermap.org/data/2.5/onecall/timemachine";
 
