@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const submit = require('./submit.js');
 const fetch = require("node-fetch");
-const mapquestkey = "oQDLZe52PfGqbqecAG3EQRb60ACRzXnP";
+const mapquestkey = process.env.MAP_QUEST_API_KEY;
 const directionapi = "http://www.mapquestapi.com/directions/v2/route";
 
 function makeNavSQLRequest(routeNumber) {
